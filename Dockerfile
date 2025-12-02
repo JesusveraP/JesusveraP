@@ -7,7 +7,7 @@ WORKDIR /app
 RUN apk add --no-cache nodejs npm git
 
 # Copiar archivos de configuración
-COPY composer.json composer.lock package.json package-lock.json ./
+COPY composer.lock composer.lock package.json package-lock.json ./
 
 # Instalar dependencias de PHP
 RUN composer install --no-dev --optimize-autoloader --no-scripts
