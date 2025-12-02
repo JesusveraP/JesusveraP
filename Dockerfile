@@ -1,5 +1,5 @@
 # Etapa 1: Builder - Compilar dependencias
-FROM dunglas/frankenphp:1.1-php8.2 AS builder
+FROM dunglas/frankenphp:1.1-php8.3 AS builder
 
 WORKDIR /app
 
