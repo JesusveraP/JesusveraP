@@ -37,3 +37,8 @@ public/hot
 public/storage
 /.phpunit.result.cache
 /.phpunit.cache
+# ignore deps and backups
+node_modules/
+vendor/
+PLvL+RcT.from-PLvL+RcT/
+
