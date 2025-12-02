@@ -1,0 +1,59 @@
+services:
+  - type: web
+    name: PLvL-RcT-SENA
+    env: docker
+    plan: free
+    region: ohio
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./
+    
+    # Variables de entorno para producción
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: LOG_LEVEL
+        value: info
+      - key: APP_URL
+        fromService:
+          name: PLvL-RcT-SENA
+          property: renderURL
+      
+      # Base de datos
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: sena-db
+          property: host
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        fromDatabase:
+          name: sena-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: sena-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: sena-db
+          property: password
+      
+      # Cache y sesiones
+      - key: CACHE_STORE
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+
+  # Base de datos MySQL
+  - type: mysql
+    name: sena-db
+    plan: free
+    region: ohio
+    ipAllowList: []
+    MySQLVersion: "8"

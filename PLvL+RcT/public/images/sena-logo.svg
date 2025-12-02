@@ -1,0 +1,21 @@
+<!-- Logo por defecto del SENA en formato SVG -->
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Círculo principal verde SENA -->
+  <circle cx="64" cy="64" r="60" fill="#39B54A" stroke="#2D7D32" stroke-width="2"/>
+  
+  <!-- Texto SENA -->
+  <text x="64" y="40" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">SENA</text>
+  
+  <!-- Línea separadora -->
+  <line x1="30" y1="50" x2="98" y2="50" stroke="white" stroke-width="1"/>
+  
+  <!-- Texto descriptivo -->
+  <text x="64" y="65" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">Servicio Nacional</text>
+  <text x="64" y="75" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">de Aprendizaje</text>
+  
+  <!-- Colombia -->
+  <text x="64" y="95" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">COLOMBIA</text>
+  
+  <!-- Decoración -->
+  <circle cx="64" cy="64" r="55" fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+</svg>

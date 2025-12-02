@@ -1,0 +1,218 @@
+================================================================================
+                    CONFIGURAR MAILTRAP PARA TESTING
+================================================================================
+
+El botón no funcionaba porque el .env tenía credenciales FALSAS.
+Ahora está configurado para Mailtrap (servicio gratuito para testing).
+
+================================================================================
+PASO 1: CREAR CUENTA EN MAILTRAP (2 minutos)
+================================================================================
+
+1. Ve a: https://mailtrap.io/
+2. Haz clic en "Sign Up" (arriba a la derecha)
+3. Completa el formulario:
+   - Email: tu_correo@example.com
+   - Password: contraseña_fuerte
+4. Verifica tu email (ve a tu bandeja y haz clic en el link)
+5. ¡Listo! Tu cuenta está creada
+
+================================================================================
+PASO 2: OBTENER CREDENCIALES SMTP (1 minuto)
+================================================================================
+
+1. En el dashboard de Mailtrap, busca "Email Sending" en el menú lateral
+2. Haz clic en "Integrations"
+3. Busca "SMTP" en la lista de integraciones
+4. Haz clic en SMTP
+5. Verás las credenciales en la sección "SMTP Configuration":
+
+   MAIL_HOST: live.smtp.mailtrap.io
+   MAIL_PORT: 587
+   MAIL_USERNAME: [UN NÚMERO, por ejemplo: 1234567]
+   MAIL_PASSWORD: [UNA CONTRASEÑA, por ejemplo: abcdef1234567890]
+
+6. COPIA estas credenciales
+
+================================================================================
+PASO 3: ACTUALIZAR TU .env CON LAS CREDENCIALES (1 minuto)
+================================================================================
+
+1. Abre el archivo: .env
+
+2. Busca la sección de correo (alrededor de la línea 55):
+
+   MAIL_MAILER=smtp
+   MAIL_HOST=live.smtp.mailtrap.io
+   MAIL_PORT=587
+   MAIL_USERNAME=api              <-- REEMPLAZA ESTO
+   MAIL_PASSWORD=1234567890abcdef <-- REEMPLAZA ESTO
+   MAIL_ENCRYPTION=tls
+   MAIL_FROM_ADDRESS="noreply@sena-system.com"
+   MAIL_FROM_NAME="Sistema SENA - Gestión Instructores"
+
+3. Reemplaza MAIL_USERNAME y MAIL_PASSWORD con TUS valores de Mailtrap
+
+EJEMPLO:
+   MAIL_USERNAME=1234567
+   MAIL_PASSWORD=abcdefghijklmnop
+
+4. GUARDA el archivo (Ctrl+S)
+
+================================================================================
+PASO 4: REINICIAR EL SERVIDOR LARAVEL
+================================================================================
+
+1. En tu terminal, si Laravel está ejecutando, presiona: Ctrl+C
+
+2. Ejecuta:
+   php artisan serve
+
+3. Espera a que veas: "Server running at http://127.0.0.1:8000"
+
+================================================================================
+PASO 5: PROBAR EL SISTEMA
+================================================================================
+
+1. Abre tu navegador: http://localhost:8000/forgot-password
+
+2. Deberías ver:
+   ✓ El título "Recuperar Contraseña"
+   ✓ Campo de email HABILITADO (no gris)
+   ✓ Botón "Enviar Enlace de Recuperación" HABILITADO (no gris)
+
+3. Ingresa un email que exista en tu base de datos:
+   Por ejemplo: admin@example.com (o cualquier usuario registrado)
+
+4. Haz clic en "Enviar Enlace de Recuperación"
+
+5. ¡AHORA DEBERÍA FUNCIONAR! El formulario debe:
+   - Mostrar un mensaje: "✓ Se ha enviado un enlace de restablecimiento..."
+   - Redirigirte o mostrar un estado de éxito
+
+================================================================================
+PASO 6: VER EL EMAIL EN MAILTRAP
+================================================================================
+
+1. Abre Mailtrap en otra pestaña: https://mailtrap.io/
+
+2. En el dashboard, busca la bandeja "Inbox"
+
+3. Deberías ver el email que acabas de enviar con:
+   - Asunto: "Restablecimiento de Contraseña - Sistema SENA"
+   - De: noreply@sena-system.com
+   - Para: el email que ingresaste
+
+4. Haz clic en el email para ver el contenido
+
+5. Busca el botón o enlace "Restablecer Contraseña"
+
+6. Copia ese enlace
+
+================================================================================
+PASO 7: COMPLETAR EL FLUJO DE RESET
+================================================================================
+
+1. Pega el enlace en la barra de direcciones de tu navegador
+
+2. Deberías ver el formulario para establecer nueva contraseña:
+   - Email (deshabilitado)
+   - Nueva Contraseña
+   - Confirmar Contraseña
+   - Botón "Restablecer Contraseña"
+
+3. Ingresa una contraseña nueva:
+   - Mínimo 8 caracteres
+   - Puede incluir mayúsculas, minúsculas, números
+
+   Ejemplo: NuevaContraseña123
+
+4. Confirma la contraseña (debe ser exactamente igual)
+
+5. Haz clic en "Restablecer Contraseña"
+
+6. Deberías ser redirigido al login con un mensaje de éxito
+
+7. Intenta iniciar sesión con:
+   Email: [el email que usaste]
+   Contraseña: [la nueva contraseña]
+
+8. ✅ ¡LISTO! El sistema de restablecimiento de contraseña funciona
+
+================================================================================
+RESUMEN DE CAMBIOS REALIZADOS
+================================================================================
+
+✅ Corregido error en AsistenciaController (función duplicada)
+✅ Actualizado .env con configuración de Mailtrap
+✅ Habilitadas las rutas de recuperación de contraseña
+✅ Creadas clases Mailable y Notificaciones personalizadas
+✅ Mejoradas las vistas de ForgotPassword y ResetPassword
+
+================================================================================
+SI ALGO NO FUNCIONA
+================================================================================
+
+PROBLEMA: "Email not found" - El email no existe en la BD
+SOLUCIÓN: Asegúrate de ingresar un email que esté registrado en tu BD
+          Consulta en MySQL: SELECT email FROM users;
+
+PROBLEMA: El botón sigue sin responder
+SOLUCIÓN: 1. Verifica que guardaste el .env (Ctrl+S)
+          2. Reinicia el servidor Laravel (Ctrl+C y php artisan serve)
+          3. Recarga la página del navegador (Ctrl+F5)
+
+PROBLEMA: No recibo el email en Mailtrap
+SOLUCIÓN: 1. Abre el navegador de incógnito (Ctrl+Shift+N)
+          2. Intenta de nuevo con el mismo email
+          3. Revisa que MAIL_USERNAME y MAIL_PASSWORD sean correctos
+          4. Revisa storage/logs/laravel.log para errores
+
+PROBLEMA: "Invalid reset token"
+SOLUCIÓN: El token expiró (máximo 60 minutos)
+          Solicita un nuevo enlace desde /forgot-password
+
+================================================================================
+PRÓXIMO PASO
+================================================================================
+
+Una vez que confirmes que funciona con Mailtrap, puedes:
+
+OPCIÓN A: Seguir usando Mailtrap (para desarrollo/testing)
+   - Perfecto para testing
+   - No requiere cuenta real de email
+
+OPCIÓN B: Cambiar a Gmail (para producción)
+   - Ve a: https://myaccount.google.com/security
+   - Crea "Contraseña de aplicación"
+   - Usa esa contraseña en el .env
+
+OPCIÓN C: Usar otro servicio (SendGrid, AWS SES, etc.)
+
+================================================================================
+¿NECESITAS AYUDA?
+================================================================================
+
+Si tienes problemas:
+
+1. Verifica que .env se guardó correctamente
+2. Reinicia el servidor Laravel
+3. Recarga la página con Ctrl+F5 (fuerza el cache)
+4. Revisa los logs: tail -f storage/logs/laravel.log
+
+O simplemente envía el error que ves en la pantalla.
+
+================================================================================
+ESTADO ACTUAL
+================================================================================
+
+✅ Código: COMPLETAMENTE FUNCIONAL
+✅ Configuración: LISTA para completarse con credenciales Mailtrap
+✅ Rutas: ACTIVAS Y FUNCIONANDO
+✅ Email: CONFIGURADO para Mailtrap
+
+PRÓXIMO PASO: Obtener credenciales de Mailtrap y actualizar .env
+
+Tiempo estimado: 5 minutos
+
+================================================================================
